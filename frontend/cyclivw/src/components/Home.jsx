@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { getmyTask,deleteTask,UpdateTask } from "./API/taskApiService";
+import { getUserTask,deleteTask,UpdateTask,getSortedTask } from "./API/taskApiService";
 import { useAuth } from "./auth";
 import { useNavigate } from "react-router-dom";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 const Home = () => {
     const [userList, setUserList] = useState([])
@@ -15,10 +17,17 @@ const Home = () => {
     }, [])
 
     function fetchData(){
-        getmyTask(authContext.username).then(
+        getUserTask(authContext.username).then(
             (response) => { setUserList(response.data) }
         ).catch(
             (error) => { console.log(error) }
+        )
+    }
+    function fetchsortedData(sorter){
+        getSortedTask(authContext.username,sorter).then(
+            (response)=>{setUserList(response.data)}
+        ).catch(
+            (error)=>console.log(error)
         )
     }
     function handleDelete(id){
@@ -76,7 +85,16 @@ const Home = () => {
                     <p>No tasks are available, please add some.</p>
                 )}
                 <hr />
-                <button onClick={navigateTask}>Add Task</button>
+                <Button  onClick={navigateTask} variant="contained" color="success">
+                Add Task
+      </Button>
+                <br />
+                <br />
+                <ButtonGroup variant="contained" aria-label="Basic button group">
+                    <Button onClick={()=>fetchsortedData("completed")}>completed</Button>
+                    <Button onClick={()=>fetchsortedData("pending")}>pending</Button>
+                    <Button onClick={fetchData}>all Tasks</Button>
+                </ButtonGroup>
             </div>
 
         </div>
