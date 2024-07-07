@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Card from '@mui/material/Card';
 import { useAuth } from "../auth";
 import './login.css'
 
@@ -29,7 +30,7 @@ const Login = () => {
     return (
         <div className="login-card">
             <h2>Login</h2>
-            <div>
+            <Card sx={{ maxWidth: 345 }}>
                 <div className="input-group">
                     <label>Username</label>
                     <input type="text" id="username" name="username" value={name} onChange={(e) => setName(e.target.value)} />
@@ -43,7 +44,7 @@ const Login = () => {
                     <button type="button" onClick={handleLogin}>Login</button>
                     <button type="button" onClick={signupPage}>Sign Up</button>
                 </div>
-            </div>
+            </Card>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUserTask,deleteTask,UpdateTask,getSortedTask } from "./API/taskApiService";
+import { deleteTask,UpdateTask,getSortedTask } from "./API/taskApiService";
 import { useAuth } from "./auth";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
@@ -13,16 +13,9 @@ const Home = () => {
     const navigateTo=useNavigate()
 
     useEffect(() => {
-        fetchData()
+        fetchsortedData("All")
     }, [])
 
-    function fetchData(){
-        getUserTask(authContext.username).then(
-            (response) => { setUserList(response.data) }
-        ).catch(
-            (error) => { console.log(error) }
-        )
-    }
     function fetchsortedData(sorter){
         getSortedTask(authContext.username,sorter).then(
             (response)=>{setUserList(response.data)}
@@ -32,7 +25,7 @@ const Home = () => {
     }
     function handleDelete(id){
         deleteTask(id).then(
-            ()=>{fetchData()}
+            ()=>{fetchsortedData("All")}
         ).catch(
             (error)=>{console.log(error)}
         )
@@ -40,7 +33,7 @@ const Home = () => {
     function handleUpdate(id){
         SetEditing(0)
         UpdateTask(id,updatedState).then(
-            (response)=>{fetchData()}
+            (response)=>{fetchsortedData("ALL")}
         ).catch(
             (error)=>{console.log(error)}
         )
@@ -76,7 +69,10 @@ const Home = () => {
                                     :""}
                                     <td> {isEditing==task.id?<button onClick={()=>handleUpdate(task.id)}>modify</button>:
                                     <button onClick={()=>{SetEditing(task.id)}}>Update</button>}</td>
-                                    <td> <button onClick={()=>{handleDelete(task.id)}}>Delete</button></td>
+                                    <td> 
+                                        
+                                    <Button size="small" onClick={()=>{handleDelete(task.id)}} variant="outlined" color="error">Delete</Button>    
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -93,7 +89,7 @@ const Home = () => {
                 <ButtonGroup variant="contained" aria-label="Basic button group">
                     <Button onClick={()=>fetchsortedData("completed")}>completed</Button>
                     <Button onClick={()=>fetchsortedData("pending")}>pending</Button>
-                    <Button onClick={fetchData}>all Tasks</Button>
+                    <Button onClick={()=>fetchsortedData("All")}>all Tasks</Button>
                 </ButtonGroup>
             </div>
 
